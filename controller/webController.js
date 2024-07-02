@@ -7,8 +7,8 @@ const getResponse = async (req, res) => {
     const visitorName = req.query.visitor_name;
 
     try {
-       //let clientIp = process.env.NODE_ENV!="production" ? req.ip : req.headers["x-forwarded-for"]; 
-       let clientIp = req.headers["x-forwarded-for"]; 
+     let clientIp = process.env.NODE_ENV!="production" ? req.ip : req.headers["x-forwarded-for"]; 
+      // let clientIp = req.headers["x-forwarded-for"]; 
 
       // get location using a geolocation API
        const result = await axios.get(`${baseUrl}&q=${clientIp}`);
