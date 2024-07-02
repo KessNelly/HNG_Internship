@@ -1,31 +1,30 @@
 const axios = require('axios');
+require("dotenv").config();
 const fetchTemperature = require('../utils/weather');
-
+const baseUrl =`http://api.weatherapi.com/v1/current.json?key=${process.env.ipAddressAPI}`
 
 const getResponse = async (req, res) => {
     const visitorName = req.query.visitor_name;
 
     try {
-        let clientIp = process.env.NODE_ENV = "production" ? req.headers["x-forwarded-for"] : req.ip
-        clientIp = clientIp = "::1" ? "127.0.0.1" : clientIp
-        console.log(clientIp);
+       let clientIp = process.env.NODE_ENV!="production" ? req.ip : req.headers["x-forwarded-for"]; 
 
-        // get location using a geolocation API
-       const ipAddress = await axios.get(`https://ipapi.co/${clientIp}/json/`);
-
+      // get location using a geolocation API
+       const result = await axios.get(`${baseUrl}&q=${clientIp}`);
+     
       // Check if ipAddress indicates an error
-       if (ipAddress.data.error) {
-        throw new Error(ipAddress.data.reason);
+       if (result.data.error) {
+        throw new Error(result.data.reason);
          }
        
-       const location = ipAddress.data.city;
+       const location = result.data.location.name;
 
-       console.log(ipAddress.data);
-        //get temperatue from a weather API
+       console.log(result.data);
+        //get temperature from a weather API
        
-        const temperature = await fetchTemperature(location);
+        const temperature = result.data.current.temp_c;
 
-        const greeting = `Hello, ${visitorName}!, the temperature is ${temperature} degrees Celsius in ${location}`;
+        const greeting = `Hello, ${visitorName || "visitor"}!, the temperature is ${temperature} degrees Celsius in ${location}`;
 
         const data = {
                     client_ip: clientIp,
