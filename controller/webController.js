@@ -1,15 +1,11 @@
 const axios = require('axios');
 require("dotenv").config();
-//const fetchTemperature = require('../utils/weather');
 const baseUrl =`http://api.weatherapi.com/v1/current.json?key=${process.env.ipAddressAPI}`
 
 const getResponse = async (req, res) => {
     const visitorName = req.query.visitor_name;
 
-    try {
-     //let clientIp = process.env.NODE_ENV!="production" ? req.ip : req.headers["x-forwarded-for"]; 
-     //let clientIp = process.env.NODE_ENV !== "production" ? req.ip : req.headers["x-forwarded-for"];
-      // let clientIp = req.headers["x-forwarded-for"]; 
+    try { 
       let clientIp = req.ip; // Default to req.ip which might be ::1 in some setups
 
       // Check if running in production and use appropriate header for client IP
